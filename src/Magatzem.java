@@ -1,6 +1,4 @@
-// 1. Añadimos 'public' para que sea accesible desde los paquetes de test
 public class Magatzem {
-    // Añadimos public al atributo para que el test pueda inspeccionar el array si lo necesita
     public Article[] articles;
 
     public Magatzem(Article[] articles) {
@@ -8,56 +6,10 @@ public class Magatzem {
     }
 
     public void actualitzarEstat() {
-        for (int i = 0; i < articles.length; i++) {
-            // 2. Corregido el espacio extra en "Formatge Gidurat" para que coincida exactamente con tu test
-            if (!articles[i].nom.equals("Formatge Gidurat")
-                    && !articles[i].nom.equals("Entrades per al Concert del Trobador")) {
-                if (articles[i].qualitat > 0) {
-                    if (!articles[i].nom.equals("Martell de Thor (Llegendari)")) {
-                        articles[i].qualitat = articles[i].qualitat - 1;
-                    }
-                }
-            } else {
-                if (articles[i].qualitat < 50) {
-                    articles[i].qualitat = articles[i].qualitat + 1;
-
-                    if (articles[i].nom.equals("Entrades per al Concert del Trobador")) {
-                        if (articles[i].diesPerVendre < 11) {
-                            if (articles[i].qualitat < 50) {
-                                articles[i].qualitat = articles[i].qualitat + 1;
-                            }
-                        }
-
-                        if (articles[i].diesPerVendre < 6) {
-                            if (articles[i].qualitat < 50) {
-                                articles[i].qualitat = articles[i].qualitat + 1;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (!articles[i].nom.equals("Martell de Thor (Llegendari)")) {
-                articles[i].diesPerVendre = articles[i].diesPerVendre - 1;
-            }
-
-            if (articles[i].diesPerVendre < 0) {
-                if (!articles[i].nom.equals("Formatge Gidurat")) {
-                    if (!articles[i].nom.equals("Entrades per al Concert del Trobador")) {
-                        if (articles[i].qualitat > 0) {
-                            if (!articles[i].nom.equals("Martell de Thor (Llegendari)")) {
-                                articles[i].qualitat = articles[i].qualitat - 1;
-                            }
-                        }
-                    } else {
-                        articles[i].qualitat = articles[i].qualitat - articles[i].qualitat;
-                    }
-                } else {
-                    if (articles[i].qualitat < 50) {
-                        articles[i].qualitat = articles[i].qualitat + 1;
-                    }
-                }
-            }
+        for (Article article : articles) {
+            // La factoría nos da la estrategia correcta y esta actualiza el artículo
+            ActualitzadorEstrategia estrategia = EstrategiaFactory.obtenirEstrategia(article.nom);
+            estrategia.actualitzar(article);
         }
     }
 }
